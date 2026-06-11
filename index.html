@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบทดสอบคณิตศาสตร์ธุรกิจ</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #f0f2f5; }
+
+    #header {
+      background: #1a73e8;
+      color: white;
+      padding: 16px;
+      text-align: center;
+    }
+
+    #timer-box {
+      background: white;
+      margin: 16px auto;
+      max-width: 400px;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    #timer {
+      font-size: 56px;
+      font-weight: bold;
+      color: #d32f2f;
+      letter-spacing: 4px;
+    }
+
+    #timer.warning { color: #f57c00; }
+    #timer.expired { color: #9e9e9e; }
+
+    #status {
+      margin-top: 8px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    #form-container {
+      width: 100%;
+      height: 80vh;
+    }
+
+    #form-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    #expired-screen {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+      background: white;
+      margin: 20px auto;
+      max-width: 500px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    #expired-screen h2 { font-size: 32px; color: #d32f2f; }
+    #expired-screen p { margin-top: 12px; color: #555; font-size: 18px; }
+  </style>
+</head>
+<body>
+
+  <div id="header">
+    <h1>แบบทดสอบคณิตศาสตร์ธุรกิจ</h1>
+  </div>
+
+  <div id="timer-box">
+    <div>⏱ เวลาที่เหลือ</div>
+    <div id="timer">60:00</div>
+    <div id="status"></div>
+  </div>
+
+  <!-- Google Form -->
+  <div id="form-container">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScoey9mOV3FXUswNPvi1Nrw8zA-WiOXCZzCy5S3XoUKooAk2w/viewform?embedded=true">
+      กำลังโหลด...
+    </iframe>
+  </div>
+
+  <!-- หน้าหมดเวลา -->
+  <div id="expired-screen">
+    <h2>⏰ หมดเวลาแล้ว!</h2>
+    <p>ระบบได้ปิดแบบทดสอบเรียบร้อยแล้ว<br>กรุณาติดต่ออาจารย์ผู้คุมสอบ</p>
+  </div>
+
+  <script>
+    let timeLeft = 3600; // ← เปลี่ยนตรงนี้ (วินาที)
+    // 60 นาที = 3600
+    // 45 นาที = 2700
+    // 30 นาที = 1800
+
+    const timerEl = document.getElementById('timer');
+    const statusEl = document.getElementById('status');
+    const formContainer = document.getElementById('form-container');
+    const expiredScreen = document.getElementById('expired-screen');
+
+    function updateTimer() {
+      const min = Math.floor(timeLeft / 60);
+      const sec = timeLeft % 60;
+      timerEl.textContent =
+        String(min).padStart(2, '0') + ':' +
+        String(sec).padStart(2, '0');
+
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        timerEl.textContent = '00:00';
+        timerEl.classList.add('expired');
+        formContainer.style.display = 'none';
+        expiredScreen.style.display = 'block';
+        return;
+      }
+
+      if (timeLeft <= 600) {
+        timerEl.classList.add('warning');
+        statusEl.textContent = '⚠️ เหลือเวลาอีก ' + Math.ceil(timeLeft/60) + ' นาที!';
+      }
+
+      timeLeft--;
+    }
+
+    updateTimer();
+    const countdown = setInterval(updateTimer, 1000);
+  </script>
+
+</body>
+</html>
